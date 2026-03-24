@@ -1,0 +1,600 @@
+/* =========================================================
+   NCM Event Calendar — CLEANED
+   Fixes:
+   - Removes scrollgrid divider + spacing artifacts (extra “rows”)
+   - Keeps dropdown intact (no all:unset)
+   - Keeps grid rounded only
+   ========================================================= */
+
+.ncm-ec{
+  --ec-control-height: 36px;
+  max-width: 100%;
+}
+
+/* Don’t let Elementor wrappers clip menus */
+[data-ncm-ec],
+[data-ncm-ec] .elementor-widget-container,
+.ncm-ec,
+.ncm-ec .fc{
+  overflow: visible !important;
+}
+
+/* =========================================================
+   TOOLBAR (keep it simple + stable)
+   ========================================================= */
+[data-ncm-ec] .fc .fc-header-toolbar{
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 24px !important;
+  padding: 18px 18px 14px;
+  margin: 0 !important;
+}
+
+/* left chunk inline */
+[data-ncm-ec] .fc .fc-header-toolbar .fc-toolbar-chunk:first-child{
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  white-space: nowrap;
+  flex-wrap: nowrap;
+}
+
+/* title chunk can shrink */
+[data-ncm-ec] .fc .fc-header-toolbar .fc-toolbar-chunk:nth-child(2){
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* right chunk inline */
+[data-ncm-ec] .fc .fc-header-toolbar .fc-toolbar-chunk:last-child{
+  display: inline-flex;
+  justify-content: flex-end;
+  white-space: nowrap;
+}
+
+/* title */
+[data-ncm-ec] .fc .fc-toolbar-title{
+  font-weight: 900;
+  letter-spacing: .03em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* normalize FC buttons (prevents weird vertical space) */
+[data-ncm-ec] .fc .fc-button{
+  height: var(--ec-control-height);
+  line-height: var(--ec-control-height);
+  padding: 0 16px;
+}
+[data-ncm-ec] .fc .fc-button-group{
+  display: inline-flex;
+  flex-wrap: nowrap;
+}
+[data-ncm-ec] .fc .fc-prev-button,
+[data-ncm-ec] .fc .fc-next-button{
+  width: 44px;
+  padding: 0 !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+[data-ncm-ec] .fc .fc-today-button{
+  margin: 0 !important;
+  white-space: nowrap;
+}
+
+/* =========================================================
+   VIEW DROPDOWN (your injected controls)
+   ========================================================= */
+.ncm-ec-view{
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  z-index: 25;
+}
+
+.ncm-ec-view-btn{
+  display: inline-flex;
+  align-items: center;
+  height: var(--ec-control-height);
+  gap: 10px;
+  padding: 0 16px;
+  border: 1px solid rgba(0,0,0,.18);
+  border-radius: 10px;
+  background: rgba(255,255,255,.35);
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+.ncm-ec-view-menu{
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 180px;
+  max-height: 260px;
+  overflow: auto;
+  background: #fff;
+  border: 1px solid rgba(0,0,0,.18);
+  border-radius: 12px;
+  box-shadow: 0 10px 24px rgba(0,0,0,.12);
+  display: none;
+  z-index: 99999;
+}
+.ncm-ec-view.is-open .ncm-ec-view-menu{ display: block; }
+
+/* dropdown items: safe reset (no all:unset) */
+.ncm-ec .ncm-ec-view-menu .ncm-ec-view-item{
+  appearance: none;
+  -webkit-appearance: none;
+  border: 0;
+  background: transparent;
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 14px;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+.ncm-ec .ncm-ec-view-menu .ncm-ec-view-item:hover{
+  background: rgba(0,0,0,.06);
+}
+
+/* =========================================================
+   GRID CARD (rounded ONLY around scrollgrid)
+   ========================================================= */
+[data-ncm-ec] .fc .fc-scrollgrid{
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(0,0,0,.18);
+  background: #fff;
+}
+
+/* IMPORTANT: remove scrollgrid spacing that creates “ghost rows” */
+[data-ncm-ec] .fc table.fc-scrollgrid{
+  
+  border-spacing: 0 !important;
+}
+
+/* Header TH + Body TD: remove padding that looks like empty rows */
+[data-ncm-ec] .fc .fc-scrollgrid-section-header > th,
+[data-ncm-ec] .fc .fc-scrollgrid-section-body   > td{
+  padding: 0 !important;
+  border: 0 !important;
+}
+
+/* Kill the divider row between header and body (the big blank band) */
+[data-ncm-ec] .fc .fc-scrollgrid-section-divider{
+  display: none !important;
+}
+
+
+/* Kill any footer section (sometimes becomes bottom blank band) */
+[data-ncm-ec] .fc .fc-scrollgrid-section-footer{
+  display: none !important;
+}
+
+/* Remove sticky header background fill */
+[data-ncm-ec] .fc .fc-scrollgrid-section-sticky > *{
+  background: none !important;
+}
+
+/* Remove bottom spacer inside each day */
+[data-ncm-ec] .fc .fc-daygrid-day-bottom{
+  display: none !important;
+}
+
+[data-ncm-ec] .fc .fc-daygrid-day-frame{
+  display: flex !important;
+  flex-direction: column !important;
+  min-height: 85px;       /* optional: your “default” row feel */
+  height: auto !important;
+}
+
+[data-ncm-ec] .fc .fc-daygrid-day-top{ flex: 0 0 auto !important; }
+[data-ncm-ec] .fc .fc-daygrid-day-events{ flex: 1 1 auto !important; min-height: 0 !important; }
+
+
+@media (max-width:767px){
+
+
+  [data-ncm-ec] .fc .fc-header-toolbar{
+    padding: 12px 10px 10px;
+    gap: 12px !important;
+  }
+}
+
+
+
+/* =========================================================
+   FC MONTH GRID HEIGHT FIX (liquid scroller)
+   Prevents FC from calculating table height:0px
+   ========================================================= */
+
+/* Give the month view a dependable height to measure against */
+[data-ncm-ec] .fc .fc-view-harness{
+  min-height: 500px; /* adjust if desired */
+}
+
+/* IMPORTANT: let FullCalendar’s scroller be measurable */
+[data-ncm-ec] .fc .fc-scroller-harness,
+[data-ncm-ec] .fc .fc-scroller-harness-liquid{
+  height: 100% !important;
+}
+
+[data-ncm-ec] .fc .fc-scroller,
+[data-ncm-ec] .fc .fc-scroller-liquid-absolute{
+  height: 100% !important;
+  max-height: none !important;
+  overflow: hidden !important; /* FC expects this */
+}
+
+/* Ensure the daygrid body can stretch */
+[data-ncm-ec] .fc .fc-daygrid-body,
+[data-ncm-ec] .fc .fc-scrollgrid-sync-table{
+  height: 100% !important;
+}
+/* Normalize any table margin from theme (scope it) */
+[data-ncm-ec] table{
+  margin: 0;
+}
+
+/* =========================================================
+   NCM Event Calendar — Popup (HA-style)
+   ========================================================= */
+
+
+.ncm-ec-popup,
+.ncm-ec-popup *{
+  box-sizing: border-box;
+}
+
+.ncm-ec-popup-overlay[hidden]{ display: none !important; }
+
+.ncm-ec-popup-overlay{
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 28px;
+  background: rgba(0,0,0,.45);
+  z-index: 99999;
+}
+
+.ncm-ec-popup{
+  position: relative;                 /* anchors close button */
+  width: min(980px, 92vw);
+  max-height: 90vh;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+}
+
+/* Card surface */
+.ncm-ec-popup-body-wrap{ padding: 0; width: 100%; }
+
+.ncm-ec-popup-body{
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 18px 50px rgba(0,0,0,.18);
+  overflow: hidden;
+  display: flex;
+  align-items: stretch;
+  position: relative;
+}
+
+/* Close button */
+.ncm-ec-popup-close{
+  all: unset;                          /* avoid theme button styles */
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  border: 1px solid rgba(0,0,0,.12);
+  background: rgba(255,255,255,.9);
+  color: #111;
+  cursor: pointer;
+  font-size: 22px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  font-family: inherit;
+}
+.ncm-ec-popup-close:hover{ background: #fff; }
+
+/* Image column */
+.ncm-ec-popup-image{
+  flex: 0 0 42%;
+  max-width: 42%;
+  background: #f5f5f5;
+  flex-shrink: 0;
+}
+.ncm-ec-popup-image img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Content column */
+.ncm-ec-popup-content{
+  flex: 1 1 auto;
+  padding: 34px 34px 28px;
+  max-height: 100%;
+  overflow: auto;
+}
+
+/* Meta rows */
+.ncm-ec-meta{
+  list-style: none;
+  margin: 0 0 18px;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+}
+.ncm-ec-meta > li{
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  gap: 12px;
+  align-items: start;
+}
+.ncm-ec-icon{
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: rgba(0,0,0,.06);
+}
+.ncm-ec-icon svg{ width: 16px; height: 16px; display: block; }
+
+.ncm-ec-meta-title{
+  display: block;
+  font-weight: 800;
+  font-size: 14px;
+  color: #111;
+}
+.ncm-ec-meta-value{
+  display: block;
+  margin-top: 2px;
+  font-size: 14px;
+  color: #444;
+}
+
+/* Title + description */
+.ncm-ec-title{
+  margin: 6px 0 10px;
+  font-size: 28px;
+  line-height: 1.15;
+  font-weight: 900;
+  color: #111;
+}
+.ncm-ec-desc{
+  color: #333;
+  font-size: 15px;
+  line-height: 1.55;
+}
+.ncm-ec-desc p{ margin: 0 0 10px; }
+
+/* CTA */
+.ncm-ec-actions{ margin-top: 18px; display: flex; gap: 12px; flex-wrap: wrap; }
+.ncm-ec-link{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 16px;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: 800;
+  background: #111;
+  color: #fff;
+}
+.ncm-ec-link:hover{ opacity: .92; }
+
+.ncm-ec-location-link{
+  color: #111;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Mobile */
+@media (max-width: 860px){
+  .ncm-ec-popup-overlay{ padding: 14px; }
+  .ncm-ec-popup-body{ flex-direction: column; }
+  .ncm-ec-popup-image{ max-width: 100%; height: 220px; }
+  .ncm-ec-popup-content{ padding: 22px 18px 18px; max-height: none; }
+  .ncm-ec-title{ font-size: 22px; }
+}
+
+/* =========================================================
+   NCM Event Calendar — Sugar-ish Skin
+   Applies ONLY when wrapper has: .ncm-ec--sugar
+   Put this at the BOTTOM of your plugin CSS (assets/ncm-ec.css)
+   ========================================================= */
+
+/* Local variables (don’t use :root) */
+.ncm-ec--sugar{
+  --sc-border: rgba(0,0,0,.18);
+  --sc-border-soft: rgba(0,0,0,.10);
+  --sc-text: rgba(0,0,0,.78);
+  --sc-text-soft: rgba(0,0,0,.55);
+  --sc-bg: rgba(255,255,255,.45);
+  --sc-today: rgba(158,30,98,.10);
+  --sc-radius: 14px;
+}
+
+/* Title */
+.ncm-ec--sugar[data-ncm-ec] .fc-toolbar-title{
+  font-weight: 800;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--sc-text);
+}
+
+/* Toolbar buttons */
+.ncm-ec--sugar[data-ncm-ec] .fc-button{
+  background: #fff !important;
+  border: 1px solid var(--sc-border) !important;
+  border-radius: 10px !important;
+  box-shadow: none !important;
+  color: var(--sc-text-soft) !important;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  padding: 0 16px;
+}
+.ncm-ec--sugar[data-ncm-ec] .fc-button:hover{
+  background: rgba(0,0,0,.04) !important;
+}
+
+/* Prev / Next buttons */
+.ncm-ec--sugar[data-ncm-ec] .fc-prev-button,
+.ncm-ec--sugar[data-ncm-ec] .fc-next-button{
+  width: 44px;
+  padding: 0 !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Remove FullCalendar focus junk */
+.ncm-ec--sugar[data-ncm-ec] .fc-button:focus{
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+/* ---------------------------------------------------------
+   GRID CARD (ONLY the days area)
+   --------------------------------------------------------- */
+
+/* Rounded container */
+.ncm-ec--sugar[data-ncm-ec] .fc-scrollgrid{
+  background: var(--sc-bg) !important;
+  border: 1px solid var(--sc-border);
+  border-radius: var(--sc-radius);
+  overflow: hidden; /* clips grid to rounded edges */
+}
+
+/* List view background */
+.ncm-ec--sugar[data-ncm-ec] .fc-list{
+  background: var(--sc-bg);
+}
+
+/* Remove FC nested borders so we control the grid */
+.ncm-ec--sugar[data-ncm-ec] .fc-scrollgrid,
+.ncm-ec--sugar[data-ncm-ec] .fc-scrollgrid table{
+  border: 0 !important;
+}
+
+/* ---------------------------------------------------------
+   DAY HEADER (Sun–Sat row)
+   --------------------------------------------------------- */
+.ncm-ec--sugar[data-ncm-ec] .fc-col-header-cell{
+  border-right: 1px solid var(--sc-border-soft);
+  background: #fff;
+  padding:4px 8px;
+}
+.ncm-ec--sugar[data-ncm-ec] .fc-col-header-cell:last-child{
+  border-right: 0;
+}
+.ncm-ec--sugar[data-ncm-ec] .fc-col-header-cell-cushion{
+  padding: 14px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--sc-text-soft);
+}
+
+/* ---------------------------------------------------------
+   DAY CELLS
+   --------------------------------------------------------- */
+.ncm-ec--sugar[data-ncm-ec] .fc-daygrid-day{
+  border-right: 1px solid var(--sc-border-soft);
+  border-bottom: 1px solid var(--sc-border-soft);
+}
+.ncm-ec--sugar[data-ncm-ec] .fc-daygrid-day:last-child{
+  border-right: 0;
+}
+
+/* Day number */
+.ncm-ec--sugar[data-ncm-ec] .fc-daygrid-day-number{
+  padding: 14px 14px 8px;
+  font-weight: 500;
+  color: var(--sc-text);
+  text-decoration: none;
+}
+
+/* Offset days (prev / next month) */
+.ncm-ec--sugar[data-ncm-ec] .fc-day-other .fc-daygrid-day-number{
+  opacity: .45;
+}
+
+/* Hover */
+.ncm-ec--sugar[data-ncm-ec] .fc-daygrid-day:hover{
+  background: rgba(0,0,0,.035);
+}
+
+/* Today */
+.ncm-ec--sugar[data-ncm-ec] .fc-day-today{
+  background: var(--sc-today) !important;
+}
+
+/* Normalize any table margin from theme (scope it) */
+.ncm-ec--sugar[data-ncm-ec] table{
+  margin: 0;
+}
+
+/* =========================================
+   Month grid: EXPANDED ROWS (safe)
+   - lets FullCalendar control height
+   - removes ONLY the tiny divider band
+   ========================================= */
+
+/* Let FC manage scroll behavior/height */
+.ncm-ec--sugar[data-ncm-ec] .fc .fc-scroller,
+.ncm-ec--sugar[data-ncm-ec] .fc .fc-scroller-harness{
+  overflow: hidden !important; /* NOT visible */
+}
+
+/* Make the view harness actually give the grid a height */
+.ncm-ec--sugar[data-ncm-ec] .fc .fc-view-harness{
+  min-height: 560px;
+}
+
+/* Expand rows evenly */
+.ncm-ec--sugar[data-ncm-ec] .fc .fc-daygrid-body,
+.ncm-ec--sugar[data-ncm-ec] .fc .fc-scrollgrid-sync-table{
+  height: 100% !important;
+}
+
+
+/* Optional: remove the per-day bottom spacer inside cells */
+.ncm-ec--sugar[data-ncm-ec] .fc .fc-daygrid-day-bottom{
+  display: none !important;
+}
+
+/* ---------------------------------------------------------
+   MOBILE
+   --------------------------------------------------------- */
+@media (max-width: 767px){
+  .ncm-ec--sugar[data-ncm-ec] .fc-toolbar-title{
+    font-size: 20px;
+  }
+  .ncm-ec--sugar[data-ncm-ec] .fc-daygrid-day-number{
+    padding: 10px 10px 6px;
+  }
+}
